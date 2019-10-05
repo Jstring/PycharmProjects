@@ -25,7 +25,7 @@ for pg in range(1,6):
 
         db.genieChart.insert_one({'rank': musicRank, 'title': musicTitle, 'artist': musicArtist})
 
-
+# 끝!
 
 
 
