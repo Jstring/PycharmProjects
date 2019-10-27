@@ -43,7 +43,5 @@ def refreshList() :
 
    return jsonify({'result': 'success', 'data': lists }) #???? 리턴에서 뭘 줘야하지? 500에러를 안내고싶다. -> 줘야하는 값 주기
 
-
-
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)

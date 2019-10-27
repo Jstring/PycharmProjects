@@ -18,7 +18,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
-    
+    <style type="text/css">
+        .price{
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+
     <script>
 
 
@@ -28,9 +34,6 @@
                 allowClear: true
             });   
             currentList();
-            // $('.toast').toast('show');
-
-            // console.log($('#select2-selectBox-container')[0]['title'])
         });
         
 
@@ -53,20 +56,11 @@
 
                     console.log("코인 목록을 최신으로 업데이트했습니다.")    
                     }
-
-                        
-
-                    // let temp_html = '<option>' + 
-
-                    // #selectBox
-
                 }
-
             })
         }
         
         function date_to_str(format)
-
             {
                 var year = format.getFullYear();
                 var month = format.getMonth() + 1;
@@ -88,26 +82,26 @@
 
 
         function makeCoinPrice(coinName, price, time, volume, previousPrice,seqId, priceChange) {
-            let temp_html = '<tr> \ <td>'+time+'</td>\ <td>'+coinName+'</td>\ <td>' +numberFormat(price)+ '</td> \ <td>' +volume+ '</td> \ <td>' + numberFormat(previousPrice) +'</td> \ <td>'+ priceChange.toFixed(2) +"%" +'</td> \ <td>'+ seqId+ '</tr>'
+            let temp_html = '<tr> \ <td>'+time+'</td>\ <td>'+coinName+'</td>\ <td class="price">' +numberFormat(price)+ '</td> \ <td>' +volume+ '</td> \ <td>' + numberFormat(previousPrice) +'</td> \ <td>'+ priceChange.toFixed(2) +"%" +'</td> \ <td>'+ seqId+ '</tr>'
             $('#tickList').prepend(temp_html)
-
-
         }
+
+        
 
         var auto
         var lastTransaction = 0;
-      
-        
-        
+            
         function autoCall() {
              auto = setInterval(function() {
                 currentPrice()
                 console.log('success')}
                 ,500);
-        }
+        };
+    
         function clearAuto() {
             clearInterval(auto)
-        }
+            console.log('stop')
+        };
         
         function currentPrice() {
             var market = $('#select2-selectBox-container')[0]['title']
@@ -124,9 +118,11 @@
                     var price = response['trade_price']
                     
                     var time = new Date(response['trade_date_utc'] + " "+ response['trade_time_utc'])
+
                     time = time.setHours(time.getHours()+9)
                     time = new Date(time)
                     time = date_to_str(time)
+                    
                     var volume = response['trade_volume']
                     var previousPrice = response['prev_closing_price']
                     var seqId = response['sequential_id']
@@ -140,15 +136,21 @@
                     }
                     else {
                         lastTransaction = seqId    
-                    }
-
-
-                    
-
+                    }                    
                 }
-            })
+            })            
+        }
 
-            
+        function accountBalance(){
+            $.ajax({
+                type: "GET",
+                url: "https://api.upbit.com/v1/accounts",
+                data: {},
+                success: function(response) {
+                    
+                }
+
+            })
         }
 
     </script>
@@ -156,9 +158,11 @@
 
 </head>
 <body>
-
     <div>
-        <button onclick="currentList()" type="button" class="btn btn-primary btn-lg">종목조회하기</button>
+        <button onclick="accountBalance()" type="button" class="btn btn-primary btn-lg">계좌조회</button>
+    </div>
+    <div>
+        <button onclick="currentList()" type="button" class="btn btn-primary btn-lg">코인목록갱</button>
         <select class="js-example-placeholder-single js-states form-control" id="selectBox">
             <!-- makeList에서 그려줌 -->
 
