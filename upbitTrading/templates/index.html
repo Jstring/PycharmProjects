@@ -97,16 +97,17 @@
         var auto
         var lastTransaction = 0;
       
-        function clearAuto() {
-            clearInterval(auto)
-        }
+        
+        
         function autoCall() {
              auto = setInterval(function() {
                 currentPrice()
                 console.log('success')}
                 ,500);
         }
-
+        function clearAuto() {
+            clearInterval(auto)
+        }
         
         function currentPrice() {
             var market = $('#select2-selectBox-container')[0]['title']
