@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, Response
 
 app = Flask(__name__)
 
@@ -16,14 +16,14 @@ db = client.dbsparta
 def home():
    return render_template('index.html')
 
-@app.route('/list', methods=["GET"])
+@app.route('/list', methods=["POST"])
 def refreshList() :
 
 
    url = "https://api.upbit.com/v1/market/all"
 
    responses = requests.request("GET", url)
-   jsonResponses = json.loads(responses.text) # ??결과값이 text인데 json형식으로 바꿔줘야함. 여기서 한참막힘ㅠㅠ
+   jsonResponses = json.loads(responses.text) # ??결과값이 text인데 json형식으로 바꿔줘야함. 여기서 한참막힘ㅠㅠ : 항상 해줘야하는 과정
    krw = "KRW-"
 
    db.coinList.delete_many({}) # ?? 다 지우지 않고 데이터의 최신을 유지하는 방법 궁금
@@ -39,7 +39,9 @@ def refreshList() :
          coinNum = coinNum + 1
 
          # print(response['market'])
-   return '1' #???? 리턴에서 뭘 줘야하지? 500에러를 안내고싶다.
+   lists = list(db.coinList.find({},{'coinMarket': 1, '_id':0}))
+
+   return jsonify({'result': 'success', 'data': lists }) #???? 리턴에서 뭘 줘야하지? 500에러를 안내고싶다. -> 줘야하는 값 주기
 
 
 
